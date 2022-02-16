@@ -23,7 +23,7 @@
 #include <stm32f10x_gpio.h>
 #include <stm32f10x_usart.h>
 
-int outbyte(int c) {
+int __io_putchar(int c) {
 
 	/* Wait until ready to send */
 	while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET)
@@ -82,12 +82,12 @@ int main(void)
 	COMPortInit();
 	for (;;)
 	{
-	outbyte('h');
-	outbyte('e');
-	outbyte('l');
-	outbyte('l');
-	outbyte('o');
-	outbyte('\n');
+	__io_putchar('h');
+	__io_putchar('e');
+	__io_putchar('l');
+	__io_putchar('l');
+	__io_putchar('o');
+	__io_putchar('\n');
 	}
 	
 }

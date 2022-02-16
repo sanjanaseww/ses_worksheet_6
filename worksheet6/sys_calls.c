@@ -201,12 +201,12 @@ int _write(int file, char *ptr, int len) {
     switch (file) {
     case STDOUT_FILENO: /*stdout*/
         for (n = 0; n < len; n++) {
-	  outbyte(*ptr++ & (u16)0x01FF);
+	  __io_putchar(*ptr++ & (u16)0x01FF);
         }
         break;
     case STDERR_FILENO: /* stderr */
         for (n = 0; n < len; n++) {
-	  outbyte(*ptr++ & (u16)0x01FF);
+	  __io_putchar(*ptr++ & (u16)0x01FF);
         }
         break;
     default:

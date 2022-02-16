@@ -30,11 +30,11 @@ void COMPortInit( void );
 /*
  * Send a character to the COM port.
  */
-extern int outbyte(int c);
+extern int __io_putchar(int c);
 
 /*
  * Receive a character from the COM port.
  */
-extern int inbyte(void);
+extern int __io_getchar(void);
 
 #endif /* COM_PORT_H_ */
