@@ -8,7 +8,7 @@ OBJS=  $(STARTUP)   stm32f10x_rcc.o stm32f10x_usart.o stm32f10x_gpio.o main.o
 
 # Tool path
 
-TOOLROOT=/opt/gcc-arm-none-eabi/bin
+TOOLROOT=/usr/bin
 
 # Library paths
 
