@@ -1,3 +1,4 @@
+
 /*
  * A set of newlib system call stubs to be used with the arm-none-eabi Olimex board.  This 
  * is a hacked version of ones found on line by nanoage and balau82.
@@ -9,6 +10,8 @@
 #include <sys/times.h>
 #include <sys/unistd.h>
 #include <stm32f10x.h>
+int __io_getchar(void);
+int __io_putchar(int c);
 #undef errno
 extern int errno;
 
@@ -118,41 +121,54 @@ int _lseek(int file, int ptr, int dir) {
  Malloc and related functions depend on this - requires core_cm3.c from the ST preipheral library to
  use the __getMSP routine
 */
-caddr_t _sbrk(int incr) {
-
-    extern char _ebss; // Defined by the linker
+caddr_t _sbrk(int incr)
+{
+    extern char _ebss;
     static char *heap_end;
     char *prev_heap_end;
 
-    if (heap_end == 0) {
+    if (heap_end == 0)
+    {
         heap_end = &_ebss;
     }
+
     prev_heap_end = heap_end;
 
-char * stack = (char*) __get_MSP();
-     if (heap_end + incr >  stack)
-     {
-         _write (STDERR_FILENO, "Heap and stack collision\n", 25);
-         errno = ENOMEM;
-         return  (caddr_t) -1;
-         //abort ();
-     }
+    register char *stack asm("sp");
+
+    if (heap_end + incr > stack)
+    {
+        _write(STDERR_FILENO, "Heap and stack collision\n", 25);
+        errno = ENOMEM;
+        return (caddr_t)-1;
+    }
 
     heap_end += incr;
     return (caddr_t) prev_heap_end;
-
 }
 
 /*
  read
  Read a character to a file.   returns -1 as no read routine supplied
  */
-int _read(int file, char *ptr, int len) {
+
+int _read(int file, char *ptr, int len)
+{
+    int n;
+
+    if (file != STDIN_FILENO)
+    {
         errno = EBADF;
         return -1;
     }
 
+    for (n = 0; n < len; n++)
+    {
+        *ptr++ = __io_getchar();
+    }
 
+    return len;
+}
 
 /*
  stat
@@ -215,3 +231,4 @@ int _write(int file, char *ptr, int len) {
     }
     return len;
 }
+

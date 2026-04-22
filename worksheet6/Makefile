@@ -4,7 +4,7 @@ ELF=demo.elf
 
 # object files
 
-OBJS=  $(STARTUP)   stm32f10x_rcc.o stm32f10x_usart.o stm32f10x_gpio.o main.o
+OBJS=  $(STARTUP)   stm32f10x_rcc.o stm32f10x_usart.o stm32f10x_gpio.o main.o sys_calls.o
 
 # Tool path
 

@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 /*
 	Copyright 2012, Michael Scott
 
@@ -35,7 +37,12 @@ int __io_putchar(int c) {
 	return c;
 }
 
+int __io_getchar(void)
+{
+    while (USART_GetFlagStatus(USART2, USART_FLAG_RXNE) == RESET);
 
+    return USART_ReceiveData(USART2);
+}
 void COMPortInit ( void ) {
 
 	USART_InitTypeDef USART_InitStructure;
@@ -75,23 +82,17 @@ void COMPortInit ( void ) {
 }
 
 int main(void)
-
 {
-  int i,c;
+    char c;
 
-	COMPortInit();
-	for (;;)
-	{
-	__io_putchar('h');
-	__io_putchar('e');
-	__io_putchar('l');
-	__io_putchar('l');
-	__io_putchar('o');
-	__io_putchar('\n');
-	}
-	
+    COMPortInit();
+
+    for (;;)
+    {
+        c = getchar();
+        printf("You typed: %c\r\n", c);
+    }
 }
-
 #ifdef  USE_FULL_ASSERT
 
 /**
@@ -102,7 +103,8 @@ int main(void)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
+{
+
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
